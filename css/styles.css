@@ -1,0 +1,24 @@
+.page {
+	margin: 10px;
+}
+
+.title {
+	margin-left: 0px;
+	margin-top: 0px;
+}
+
+.question {
+	margin-left: 10px;
+}
+
+.option {
+	margin-left: 20px;
+}
+
+.answer {
+	margin-left: 5px;
+}
+
+.vote {
+	font-weight: bold; 
+}

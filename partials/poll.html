@@ -1,0 +1,7 @@
+<h1>{{poll.title}}</h1>
+<h4>{{poll.question}}</h4>
+<form>
+	<div ng-repeat="answer in poll.answers">
+		<input type="radio" name="answer" value="answer.Id" ng-model="picked" ng-disabled="voted" ng-change="vote(answer)"/>{{answer.text}} <span ng-show="voted">({{answer.votes}} votes)</span>
+	</div>
+</form>

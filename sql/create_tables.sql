@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `polls` (
 
 CREATE TABLE IF NOT EXISTS `ANSWERS` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `questionId` int(11) NOT NULL,
+  `pollId` int(11) NOT NULL,
   `optionNo` int(11) NOT NULL,
   `answer` varchar(512) NOT NULL,
   PRIMARY KEY (`id`)
@@ -63,10 +63,10 @@ CREATE TABLE IF NOT EXISTS `VOTES` (
 -- Generate the first poll about php with four answers and three votes for 'There are people who aren't'
 INSERT INTO POLLS (id, title, question) VALUES (1, "(in)sane", "Are you insane?");
 
-INSERT INTO ANSWERS(questionId, optionNo, answer) VALUES (1,1,"Yes");
-INSERT INTO ANSWERS(questionId, optionNo, answer) VALUES (1,2,"Without a doubt.");
-INSERT INTO ANSWERS(questionId, optionNo, answer) VALUES (1,3,"Clearly");
-INSERT INTO ANSWERS(questionId, optionNo, answer) VALUES (1,4,"There are people who aren't?");
+INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (1,1,"Yes");
+INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (1,2,"Without a doubt.");
+INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (1,3,"Clearly");
+INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (1,4,"There are people who aren't?");
 
 INSERT INTO VOTES(answerId, ip) VALUES (4, "127.0.0.1");
 INSERT INTO VOTES(answerId, ip) VALUES (4, "127.0.0.1");
@@ -75,10 +75,10 @@ INSERT INTO VOTES(answerId, ip) VALUES (4, "127.0.0.1");
 -- Generate the second poll. You can only love php
 INSERT INTO POLLS (id, title, question) VALUES (2, "PHP", "How much do you love PHP?");
 
-INSERT INTO ANSWERS(questionId, optionNo, answer) VALUES (1,1,"..uum... Do I have to answer?");
-INSERT INTO ANSWERS(questionId, optionNo, answer) VALUES (1,2,"...");
-INSERT INTO ANSWERS(questionId, optionNo, answer) VALUES (1,3,"It's alright, I suppose.");
-INSERT INTO ANSWERS(questionId, optionNo, answer) VALUES (1,4,"NO.");
+INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (1,1,"..uum... Do I have to answer?");
+INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (1,2,"...");
+INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (1,3,"It's alright, I suppose.");
+INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (1,4,"NO.");
 
 INSERT INTO VOTES(answerId, ip) VALUES (5, "127.0.0.1");
 INSERT INTO VOTES(answerId, ip) VALUES (6, "127.0.0.1");

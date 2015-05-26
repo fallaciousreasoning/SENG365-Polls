@@ -12,12 +12,12 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css"> 
-		<link rel="stylesheet" href="../../css/styles.css">
+		<link rel="stylesheet" href="<?php echo base_url() ?>/css/styles.css">
 		 
-		<script src="../../scripts/angular.js"></script>
-		<script src="../../scripts/angular-route.js"></script>
-		<script src="../../js/app.js"></script>
-		<script src="../../js/controllers.js"></script>
+		<script src="<?php echo base_url() ?>/scripts/angular.js"></script>
+		<script src="<?php echo base_url() ?>/scripts/angular-route.js"></script>
+		<script src="<?php echo base_url() ?>/js/app.js"></script>
+		<script src="<?php echo base_url() ?>/js/controllers.js"></script>
 	</head>
 	<body>
 

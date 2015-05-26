@@ -48,9 +48,9 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = 'mysql.cosc.canterbury.ac.nz';
-$db['default']['username'] = 'joh19';
-$db['default']['password'] = '51470770';
+$db['default']['hostname'] = 'localhost';//'mysql.cosc.canterbury.ac.nz';
+$db['default']['username'] = 'root';//'joh19';
+$db['default']['password'] = '';//'51470770';
 $db['default']['database'] = 'joh19';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';

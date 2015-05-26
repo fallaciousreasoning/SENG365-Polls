@@ -17,13 +17,18 @@ class Services extends CI_Controller {
         $this->load->model('vote');
         
         try {
+            $data = "";
+
             if (isset($pollId)){
                 $data = $this->poll->getPoll($pollId);
-                $this->output->set_output(json_encode($data));
             } else{
                 $data = $this->poll->getPolls();
-                $this->output->set_output(json_encode($data));
             }
+
+            //TODO set the callback properly
+            $data = "angular.callbacks._0(".json_encode($data).")";
+            $this->output->set_output($data);
+
         } catch (Exception $e) {
             $this->output->set_status_header(404, 'Unknown product ID');
         } 

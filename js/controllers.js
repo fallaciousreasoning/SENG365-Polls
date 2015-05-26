@@ -1,64 +1,11 @@
 (function () {
     'use strict';
+    var restUrl= "index.php/services",
+        pollsUrl = restUrl + "/polls",
+        votesUrl = restUrl + "/votes",
+        jsonCallback = "?callback=JSON_CALLBACK";
 
-    /* Controllers */
-
-    // Temporary Database of Polls"
-    var polls = [
-        {
-          id: 1, 
-          title: '(in)sane', 
-          question: 'Are you insane?',
-          answers: [
-            {
-              option: 0,
-              votes: 0,
-              id: 1,
-              text: "Yes" 
-            },
-            { option: 1,
-              votes: 0,
-              id: 2,
-              text: "eeer *drools*"
-            },
-            { option: 2,
-              votes: 0,
-              id: 6,
-              text: "There are people who aren't?"
-            }           
-          ]
-        },
-        {
-          id: 2, 
-          title: 'PHP', 
-          question: 'Do you like php?',
-          answers: [
-            {
-              option: 0,
-              votes: 0,
-              id: 3,
-              text: "No" 
-            },
-            { option: 1,
-              votes: 0,
-              id: 4,
-              text: "Not really"
-            },
-            { option: 1,
-              votes: 0,
-              id: 5,
-              text: "Not at all"
-            }          
-          ]
-        }
-    ];
-
-    /**
-      Returns a list of all polls
-    **/
-    function getPolls(){
-      return polls;
-    }
+    var polls = [];
 
     /**
       Gets a poll from the database via an Id
@@ -75,22 +22,29 @@
 
     var pollsControllers = angular.module('pollsControllers', []);
 
-    pollsControllers.controller('PollListController', ['$scope', 
-        function ($scope) {
+    pollsControllers.controller('PollListController', ['$scope', '$http',
+        function ($scope, $http) {
             $scope.polls = polls;
             $scope.author = 'Fred Jones';
+
+            $http.jsonp(pollsUrl + jsonCallback).success(function(data){
+                $scope.polls = data;
+            });
         }]);
 
-    pollsControllers.controller('PollController', ['$scope', '$routeParams',
-      function($scope, $routeParams) {
+    pollsControllers.controller('PollController', ['$scope', '$http', '$routeParams',
+      function($scope, $http, $routeParams) {
           var pollId = $routeParams.pollId;
-          $scope.poll = getPoll(pollId);
+          $scope.poll;
           $scope.voted = false;
 
           $scope.vote = function (answer) {
-            answer.votes++;
-            $scope.voted = true;
+            //TODO
           };
+
+          $http.jsonp(pollsUrl + "/" + pollId + jsonCallback).success(function(data){
+              $scope.poll = data;
+          });
       }]);
 
     pollsControllers.controller('AboutController', ['$scope',

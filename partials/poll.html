@@ -5,7 +5,7 @@
 		<div ng-repeat="answer in poll.answers" class="option">
 			<input type="radio" name="answer" value="answer.Id" ng-model="picked" ng-disabled="voted" ng-change="vote(answer)"/>
 
-			<span class="answer">{{answer.text}}</span>
+			<span class="answer">{{answer.answer}}</span>
 			<span ng-show="voted" class="vote">({{answer.votes}} votes)</span>
 		</div>
 	</form>

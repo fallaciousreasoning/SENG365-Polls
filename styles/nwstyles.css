@@ -1,0 +1,34 @@
+/*
+    Document   : nwstyles.css
+    Created on : 8/07/2012
+    Last edited: 18/6/2014
+    Author     : RJL
+    Description:
+        Stylesheet for use with the nwproductbrowser family.
+*/
+
+div.combobox span, div.combobox input {
+    vertical-align: top;
+}
+
+div.combobox {
+    display: inline-block;
+    padding-right: 3em;
+}
+
+
+div.product-details {
+    margin-left:7em;
+}
+
+table#ProductDetails, table#ProductDetails td,
+table#product-details-table, table#product-details-table td {
+    border-width: 1px;
+    border-spacing: 0px;
+    border-style: inset;
+    border-color: gray;
+    border-collapse: collapse;
+    padding: 4px;
+}
+
+

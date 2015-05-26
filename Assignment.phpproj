@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Name>Assignment</Name>
+    <ProjectGuid>940d1fe5-2a0a-4a0e-834c-721f30c80263</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Assignment</RootNamespace>
+    <ProjectTypeGuids>{A0786B88-2ADB-4C21-ABE8-AA2D79766269}</ProjectTypeGuids>
+    <AssemblyName>Assignment</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <IncludeDebugInformation>false</IncludeDebugInformation>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="application\config\autoload.php" />
+    <Compile Include="application\config\config.php" />
+    <Compile Include="application\config\constants.php" />
+    <Compile Include="application\config\database.php" />
+    <Compile Include="application\config\doctypes.php" />
+    <Compile Include="application\config\foreign_chars.php" />
+    <Compile Include="application\config\hooks.php" />
+    <Compile Include="application\config\migration.php" />
+    <Compile Include="application\config\mimes.php" />
+    <Compile Include="application\config\profiler.php" />
+    <Compile Include="application\config\routes.php" />
+    <Compile Include="application\config\smileys.php" />
+    <Compile Include="application\config\user_agents.php" />
+    <Compile Include="application\controllers\services.php" />
+    <Compile Include="application\controllers\welcome.php" />
+    <Compile Include="application\errors\error_404.php" />
+    <Compile Include="application\errors\error_db.php" />
+    <Compile Include="application\errors\error_general.php" />
+    <Compile Include="application\errors\error_php.php" />
+    <Compile Include="application\models\answer.php" />
+    <Compile Include="application\models\poll.php" />
+    <Compile Include="application\models\vote.php" />
+    <Compile Include="application\views\welcome_message.php" />
+    <Compile Include="index.php" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="application\.htaccess" />
+    <Content Include="application\cache\.htaccess" />
+    <Content Include="application\cache\index.html" />
+    <Content Include="application\config\db.config" />
+    <Content Include="application\config\index.html" />
+    <Content Include="application\core\index.html" />
+    <Content Include="application\errors\index.html" />
+    <Content Include="application\helpers\index.html" />
+    <Content Include="application\hooks\index.html" />
+    <Content Include="application\index.html" />
+    <Content Include="application\language\english\index.html" />
+    <Content Include="application\language\index.html" />
+    <Content Include="application\libraries\index.html" />
+    <Content Include="application\logs\index.html" />
+    <Content Include="application\models\index.html" />
+    <Content Include="application\third_party\index.html" />
+    <Content Include="application\views\index.html" />
+    <Content Include="css\styles.css" />
+    <Content Include="index.js.html" />
+    <Content Include="js\app.js" />
+    <Content Include="js\controllers.js" />
+    <Content Include="scripts\angular-route.js" />
+    <Content Include="scripts\angular.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="application\" />
+    <Folder Include="application\cache\" />
+    <Folder Include="application\config\" />
+    <Folder Include="application\controllers\" />
+    <Folder Include="application\core\" />
+    <Folder Include="application\errors\" />
+    <Folder Include="application\helpers\" />
+    <Folder Include="application\hooks\" />
+    <Folder Include="application\language\" />
+    <Folder Include="application\language\english\" />
+    <Folder Include="application\libraries\" />
+    <Folder Include="application\logs\" />
+    <Folder Include="application\models\" />
+    <Folder Include="application\third_party\" />
+    <Folder Include="application\views\" />
+    <Folder Include="css\" />
+    <Folder Include="js\" />
+    <Folder Include="scripts\" />
+  </ItemGroup>
+</Project>

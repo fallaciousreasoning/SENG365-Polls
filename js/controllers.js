@@ -42,19 +42,13 @@
               $http.post(votesUrl + "/" + pollId + "/" + answer.optionNo + jsonCallback).success(function () {
                   $http.jsonp(votesUrl + "/" + pollId + jsonCallback).success(function(data){
                       for (var i = 0; i < data.length; ++i){
-                          var vote = data[i],
-                              a = $scope.poll.answers[vote.answerId];
-
-                          if (!a.vote){
-                              a.vote = 0;
-                          }
-
-                          a.vote += 1;
-                          console.log(a.vote);
+                          var votes = data[i],
+                              answer = $scope.poll.answers[i];
+                          answer.votes = votes;
+                          $scope.voted = true;
                       }
                   });
               });
-              $scope.voted = true;
           };
 
           $http.jsonp(pollsUrl + "/" + pollId + jsonCallback).success(function(data){

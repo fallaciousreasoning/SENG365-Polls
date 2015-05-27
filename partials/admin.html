@@ -1,0 +1,28 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h1 class="panel-title">Administer</h1>
+    </div>
+    <ul class="list-group panel-body">
+        <li class="list-group-item" ng-repeat="poll in polls">
+            <a href="#/polls/{{poll.id}}">{{poll.title}}</a>
+            <a ng-click="reset"> Reset </a>
+        </li>
+    </ul>
+</div>
+
+<div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">Administer</div>
+    <div class="panel-body">
+        <p>Description of doing admin things</p>
+    </div>
+
+    <!-- Table -->
+    <table class="table">
+        <tr ng-repeat="poll in polls">
+            <td>{{poll.title}}</td>
+            <td><a ng-click="reset(poll)">Reset</a></td>
+            <td><a ng-click="delete(poll)">Delete</a></td>
+        </tr>
+    </table>
+</div>

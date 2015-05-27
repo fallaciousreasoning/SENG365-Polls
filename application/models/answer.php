@@ -15,13 +15,10 @@ class Answer extends CI_Model {
     public $id;
     public $pollId;
     public $optionNo;
-    public $answer; 
-    
-    public $votes;
+    public $answer;
     
     public function __construct() {
         $this->load->database();
-        $this->load->model('vote');
     }
     
     /**
@@ -71,7 +68,5 @@ class Answer extends CI_Model {
             $fieldName = strtolower($field[0]) . substr($field, 1);
             $this->$fieldName = $value;
         }
-        
-        $this->votes = $this->vote->getVotes($this->id);
     }
 }

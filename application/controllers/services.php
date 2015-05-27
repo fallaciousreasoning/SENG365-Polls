@@ -10,7 +10,7 @@ class Services extends CI_Controller {
      * specified by the 'pollId' variable
     **/
     public function polls($pollId=NULL)
-    {       
+    {
         $this->output->set_content_type('application/json');
         $this->load->model('poll');
         $this->load->model('answer');
@@ -25,8 +25,12 @@ class Services extends CI_Controller {
                 $data = $this->poll->getPolls();
             }
 
-            //TODO set the callback properly
-            $data = "angular.callbacks._0(".json_encode($data).")";
+            $data = json_encode($data);
+
+            $callback = $this->input->get('callback');
+            if ($callback){
+                $data = $callback."(".$data.")";
+            }
             $this->output->set_output($data);
 
         } catch (Exception $e) {
@@ -61,6 +65,8 @@ class Services extends CI_Controller {
         
         if (isset($optionNo)){ 
             $this->vote($pollId, $optionNo);
+        } else{
+            //TODO respond with all the votes on a poll
         }
     }
 }

@@ -36,15 +36,36 @@ class Vote extends CI_Model {
         }
         return $list;
     }
+
+    /**
+     * Gets a list of all the votes on a specific poll
+     * @param $pollId The id of the poll
+     * @return array The votes from the specified poll
+     */
+    public function getAllVotes($pollId) {
+        $this->db->select("votes.id, votes.answerId, votes.ip");
+        $this->db->from("votes");
+        $this->db->join("answers", "votes.answerId = answers.id and answers.pollId = $pollId");
+        $rows = $this->db->get()->result();
+
+        $list = array();
+        foreach ($rows as $row){
+            $vote = new Vote();
+            $vote->load($row);
+            $list[] = $vote;
+        }
+
+        return $list;
+    }
     
     /**
      * Votes for a specific answer
      * @param type $answer
      * @param type $ip
      */
-    public function vote($answer, $ip) {
+    public function vote($answerId, $ip) {
         //$query = $this->db->query("INSERT INTO VOTES (answerId, ip) VALUES ($answer->id, $ip);");//.$this->db->escape($answer->id).", ".$this->db-escape($ip).")");
-        $data = array('answerId'=>$answer->id, 'ip'=>$ip);
+        $data = array('answerId'=>$answerId, 'ip'=>$ip);
         $this->db->insert('VOTES', $data);
     }
     

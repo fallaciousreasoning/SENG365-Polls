@@ -75,10 +75,10 @@ INSERT INTO VOTES(answerId, ip) VALUES (4, "127.0.0.1");
 -- Generate the second poll. You can only love php
 INSERT INTO POLLS (id, title, question) VALUES (2, "PHP", "How much do you love PHP?");
 
-INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (1,1,"..uum... Do I have to answer?");
-INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (1,2,"...");
-INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (1,3,"It's alright, I suppose.");
-INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (1,4,"NO.");
+INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (2,1,"..uum... Do I have to answer?");
+INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (2,2,"...");
+INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (2,3,"It's alright, I suppose.");
+INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (2,4,"NO.");
 
 INSERT INTO VOTES(answerId, ip) VALUES (5, "127.0.0.1");
 INSERT INTO VOTES(answerId, ip) VALUES (6, "127.0.0.1");

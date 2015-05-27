@@ -18,10 +18,12 @@ class Poll extends CI_Model {
     public $question;
     
     public $answers;
+    public $votes;
     
     public function __construct() {
         $this->load->database();
         $this->load->model('answer');
+        $this->load->model('vote');
     }
     
     /** Return an array of all polls in the database.
@@ -71,5 +73,6 @@ class Poll extends CI_Model {
         }
         
         $this->answers = $this->answer->getAnswers($this->id);
+        $this->votes = $this->vote->getVotes($this->id);
     }
 }

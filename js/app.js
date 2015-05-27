@@ -19,6 +19,10 @@
             templateUrl: 'partials/poll.html',
             controller: 'PollController'
           }).
+          when('/about', {
+            templateUrl: "partials/about.html",
+            controller: 'AboutController'
+          }).
           otherwise({
             redirectTo: '/polls'
           });

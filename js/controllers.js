@@ -21,7 +21,6 @@
     }
 
     var pollsControllers = angular.module('pollsControllers', []);
-
     pollsControllers.controller('PollListController', ['$scope', '$http',
         function ($scope, $http) {
             $scope.polls = polls;

@@ -1,72 +1,104 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
 
-// The controller to handle AJAX requests.
-// Responses are JSON data rather than "views" in a normal sense, so we
-// just emit the data from within the controller.
-class Services extends CI_Controller {
-    
+require APPPATH.'/libraries/REST_Controller.php';
+/**
+ * Created by PhpStorm.
+ * User: jayha_000
+ * Date: 27/05/2015
+ * Time: 10:06 AM
+ */
+
+class Rest extends REST_Controller {
     /**
-     * Gets the list of all polls (if no ID is specified) or a specific poll
-     * specified by the 'pollId' variable
-    **/
-    public function polls($pollId=NULL)
-    {
-        $this->output->set_content_type('application/json');
-        $this->load->model('poll');
-        $this->load->model('answer');
-        $this->load->model('vote');
-        
-        try {
-            $data = "";
-
-            if (isset($pollId)){
-                $data = $this->poll->getPoll($pollId);
-            } else{
-                $data = $this->poll->getPolls();
-            }
-
-            $data = json_encode($data);
-
-            $callback = $this->input->get('callback');
-            if ($callback){
-                $data = $callback."(".$data.")";
-            }
-            $this->output->set_output($data);
-
-        } catch (Exception $e) {
-            $this->output->set_status_header(404, 'Unknown product ID');
-        } 
-    }
-    
-    /**
-     * Votes for an option in a poll
-     * @param type $pollId The poll to vote on
-     * @param type $optionNo The option to vote for
+     * Gets a list of all available polls or a specific poll (if one is specified)
+     * @param null $pollId The id of the poll to fetch. If not specified you'll recieve an array of polls
      */
-    private function vote($pollId, $optionNo) {          
-        try {            
-            $answer = $this->answer->getAnswer($pollId, $optionNo);
-            $this->vote->vote($answer, "127.0.0.1");
-        } catch (Exception $e) {
-            $this->output->set_status_header(404, 'Unknown vote or option ID');
-        } 
-    }
-    
-    /**
-     * Gets a list of votes for a poll (if only a pollId is specified) or
-     * votes for the 'vote' option on the specified poll
-     * @param type $pollId The id of the poll
-     * @param type $vote The id of the vote to vote for
-     */
-    public function votes($pollId, $optionNo=NULL){ 
-        $this->load->model('poll');
-        $this->load->model('answer');
-        $this->load->model('vote');
-        
-        if (isset($optionNo)){ 
-            $this->vote($pollId, $optionNo);
+    public function polls_get($pollId = NULL){
+        $this->load->model("poll");
+
+        if (isset($pollId)) {
+            try {
+                $poll = $this->poll->getPoll($pollId);
+                $this->response($poll, 200);
+            }catch (Exception $e){
+                $this->response(array("errorMessage"=>"Invalid poll Id!"), 500);
+            }
         } else{
-            //TODO respond with all the votes on a poll
+            $polls = $this->poll->getPolls();
+            $this->response($polls, 200);
         }
+    }
+
+    /**
+     * Should create a new poll object and return a 201 created status
+     * with a location header pointing to the newly created poll object
+     */
+    public function polls_post(){
+
+    }
+
+    /**
+     * Updates an existing poll and returns a 200
+     * @param $pollId The id of the poll to update
+     */
+    public function polls_put($pollId){
+
+    }
+
+    /**
+     * Deletes an existing poll. Returns a 200 if successful
+     * @param $pollId The id of the poll to delete
+     */
+    public function polls_delete($pollId){
+        $this->load->model("poll");
+
+        try {
+            $this->poll->deleteRecursive($pollId);
+        }catch (Exception $e){
+            $this->response(array("errorMessage"=>"Invalid poll Id!"), 500);
+        }
+    }
+
+    /**
+     * Gets a list of all the votes on a specific poll
+     * @param $pollId The id of the poll to get votes for
+     */
+    public function votes_get($pollId){
+        $this->load->model("vote");
+
+        $votes = $this->vote->getAllVotes($pollId);
+        $this->response($votes, 200);
+    }
+
+    /**
+     * Posts a vote for a specific poll
+     * @param $pollId The id of the poll
+     * @param $optionNo The option to vote for, within the poll
+     */
+    public function votes_post($pollId, $optionNo){
+        $this->load->model("answer");
+        $this->load->model("vote");
+
+        try {
+            $ip = $this->input->ip_address();
+
+            $answer = $this->answer->getAnswer($pollId, $optionNo);
+
+            $this->vote->vote($answer->id, $ip);
+            $this->response(NULL, 201);
+        }catch (Exception $e){
+            $this->response(array("errorMessage"=>"Invalid poll or option!"), 500);
+        }
+    }
+
+    /**
+     * Deletes all the answers for a specific poll
+     * @param $pollId The id of the poll to delete answers for
+     */
+    public function votes_delete($pollId) {
+        $this->load->model("vote");
+
+        $this->vote->deleteVotes($pollId);
+        $this->response(NULL, 200);
     }
 }

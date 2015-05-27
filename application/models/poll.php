@@ -41,10 +41,11 @@ class Poll extends CI_Model {
         }
         return $list;
     }
-    
+
     /**
      * Gets a poll from the database via an Id
      * @param type $pollId The id of the poll to fetch
+     * @return Poll The poll
      */
     public function getPoll($pollId){
         $poll = new Poll();
@@ -60,6 +61,23 @@ class Poll extends CI_Model {
         $poll->load($row);
         
         return $poll;
+    }
+
+    /**
+     * Deletes the specified poll from the data base
+     * @param $pollId The id of the poll to delete
+     */
+    public function deleteRecursive($pollId){
+        $this->load->model('answer');
+
+        $this->db->delete("POLLS", array("id"=>$pollId));
+
+        $answers = $this->answer->getAnswers($pollId);
+        foreach ($answers as $answer){
+            $this->db->delete("VOTES", array("answerId"=>$answer->id));
+        }
+
+        $this->db->delete("ANSWERS", array("pollId"=>$pollId));
     }
     
     /**

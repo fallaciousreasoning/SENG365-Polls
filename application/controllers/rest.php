@@ -17,8 +17,12 @@ class Rest extends REST_Controller {
         $this->load->model("poll");
 
         if (isset($pollId)) {
-            $poll = $this->poll->getPoll($pollId);
-            $this->response($poll, 200);
+            try {
+                $poll = $this->poll->getPoll($pollId);
+                $this->response($poll, 200);
+            }catch (Exception $e){
+                $this->response(array("errorMessage"=>"Invalid poll Id!"), 500);
+            }
         } else{
             $polls = $this->poll->getPolls();
             $this->response($polls, 200);
@@ -46,7 +50,13 @@ class Rest extends REST_Controller {
      * @param $pollId The id of the poll to delete
      */
     public function polls_delete($pollId){
+        $this->load->model("poll");
 
+        try {
+            $this->poll->deleteRecursive($pollId);
+        }catch (Exception $e){
+            $this->response(array("errorMessage"=>"Invalid poll Id!"), 500);
+        }
     }
 
     /**
@@ -69,12 +79,16 @@ class Rest extends REST_Controller {
         $this->load->model("answer");
         $this->load->model("vote");
 
-        $ip = $this->input->ip_address();
+        try {
+            $ip = $this->input->ip_address();
 
-        $answer = $this->answer->getAnswer($pollId, $optionNo);
+            $answer = $this->answer->getAnswer($pollId, $optionNo);
 
-        $this->vote->vote($answer->id, $ip);
-        $this->response(NULL, 201);
+            $this->vote->vote($answer->id, $ip);
+            $this->response(NULL, 201);
+        }catch (Exception $e){
+            $this->response(array("errorMessage"=>"Invalid poll or option!"), 500);
+        }
     }
 
     /**
@@ -84,7 +98,7 @@ class Rest extends REST_Controller {
     public function votes_delete($pollId) {
         $this->load->model("vote");
 
-        $this->vote->deleteFor($pollId);
+        $this->vote->deleteVotes($pollId);
         $this->response(NULL, 200);
     }
 }

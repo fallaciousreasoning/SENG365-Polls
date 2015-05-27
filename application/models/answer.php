@@ -20,11 +20,13 @@ class Answer extends CI_Model {
     public function __construct() {
         $this->load->database();
     }
-    
+
     /**
      * Gets an option from within a poll
      * @param type $pollId The id of the poll
      * @param type $optionNo The number of the option within the poll
+     * @return Answer the answer fetched from the database
+     * @throws Exception If more than 1 row or no rows were found.
      */
     public function getAnswer($pollId, $optionNo){
         $answer = new Answer();

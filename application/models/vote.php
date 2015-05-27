@@ -64,10 +64,23 @@ class Vote extends CI_Model {
      * @param type $ip
      */
     public function vote($answerId, $ip) {
-        //$query = $this->db->query("INSERT INTO VOTES (answerId, ip) VALUES ($answer->id, $ip);");//.$this->db->escape($answer->id).", ".$this->db-escape($ip).")");
         $data = array('answerId'=>$answerId, 'ip'=>$ip);
         $this->db->insert('VOTES', $data);
     }
+
+    /**
+     * Removes all votes from an existing poll
+     * @param $pollId The id of the poll to delete votes from
+     */
+    public function deleteVotes($pollId) {
+        $this->load->model('answer');
+        $answers = $this->answer->getAnswers($pollId);
+
+        foreach ($answers as $answer){
+            $this->db->delete('VOTES', array('answerId'=>$answer->id));
+        }
+    }
+
     
     /**
      * Loads a row from the database into a Vote object

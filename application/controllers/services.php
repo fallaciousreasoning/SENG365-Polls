@@ -8,7 +8,7 @@ require APPPATH.'/libraries/REST_Controller.php';
  * Time: 10:06 AM
  */
 
-class Rest extends REST_Controller {
+class Services extends REST_Controller {
     /**
      * Gets a list of all available polls or a specific poll (if one is specified)
      * @param null $pollId The id of the poll to fetch. If not specified you'll recieve an array of polls

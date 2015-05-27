@@ -1,4 +1,21 @@
-<h1 class="title">{{poll.title}}</h1>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h1 class="panel-title">{{poll.question}}</h1>
+    </div>
+    <div class="panel-body">
+        <form>
+            <div ng-repeat="answer in poll.answers" class="option">
+                <input type="radio" name="answer" value="answer.Id" ng-model="picked" ng-disabled="voted" ng-change="vote(answer)"/>
+
+                <span class="answer">{{answer.answer}}</span>
+                <span ng-show="voted" class="vote">({{answer.votes}} votes)</span>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--<h1 class="title">{{poll.title}}</h1>
+
 <div class="tab">
 	<h4 class="question">{{poll.question}}</h4>
 	<form>
@@ -9,4 +26,4 @@
 			<span ng-show="voted" class="vote">({{answer.votes}} votes)</span>
 		</div>
 	</form>
-</div>
+</div>-->

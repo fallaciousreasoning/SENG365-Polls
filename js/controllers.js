@@ -7,19 +7,6 @@
 
     var polls = [];
 
-    /**
-      Gets a poll from the database via an Id
-    **/
-    function getPoll(id){
-      // fetch the item from the "database"
-      for (var i = 0; i < polls.length; ++i) {
-          if (polls[i].id == id) {
-              return polls[i];
-          }
-      }
-      console.log('no such poll as ' + id);
-    }
-
     var pollsControllers = angular.module('pollsControllers', []);
     pollsControllers.controller('PollListController', ['$scope', '$http',
         function ($scope, $http) {

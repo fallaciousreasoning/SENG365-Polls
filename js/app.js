@@ -23,6 +23,10 @@
             templateUrl: "partials/about.html",
             controller: 'AboutController'
           }).
+          when('/admin', {
+              templateUrl: "partials/admin.html",
+              controller: 'AdminController'
+          }).
           otherwise({
             redirectTo: '/polls'
           });

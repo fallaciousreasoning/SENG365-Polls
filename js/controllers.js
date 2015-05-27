@@ -46,4 +46,13 @@
       function ($scope){
 
       }]);
+
+    pollsControllers.controller('AdminController', ['$scope', '$http',
+        function ($scope, $http){
+            $scope.polls = [];
+
+            $http.jsonp(pollsUrl + jsonCallback).success(function(data){
+                $scope.polls = data;
+            });
+        }]);
   }())

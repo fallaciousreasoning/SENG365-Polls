@@ -18,12 +18,10 @@ class Poll extends CI_Model {
     public $question;
     
     public $answers;
-    public $votes;
     
     public function __construct() {
         $this->load->database();
         $this->load->model('answer');
-        $this->load->model('vote');
     }
     
     /** Return an array of all polls in the database.
@@ -71,12 +69,6 @@ class Poll extends CI_Model {
         $this->load->model('answer');
 
         $this->db->delete("POLLS", array("id"=>$pollId));
-
-        $answers = $this->answer->getAnswers($pollId);
-        foreach ($answers as $answer){
-            $this->db->delete("VOTES", array("answerId"=>$answer->id));
-        }
-
         $this->db->delete("ANSWERS", array("pollId"=>$pollId));
     }
     
@@ -91,6 +83,5 @@ class Poll extends CI_Model {
         }
         
         $this->answers = $this->answer->getAnswers($this->id);
-        $this->votes = $this->vote->getVotes($this->id);
     }
 }

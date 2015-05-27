@@ -64,9 +64,14 @@ class Services extends REST_Controller {
      * @param $pollId The id of the poll to get votes for
      */
     public function votes_get($pollId){
-        $this->load->model("vote");
+        $this->load->model("answer");
 
-        $votes = $this->vote->getAllVotes($pollId);
+        $answers = $this->answer->getAnswers($pollId);
+        $votes = array();
+        foreach ($answers as $answer){
+            $votes[] = $answer->votes;
+        }
+
         $this->response($votes, 200);
     }
 
@@ -77,14 +82,11 @@ class Services extends REST_Controller {
      */
     public function votes_post($pollId, $optionNo){
         $this->load->model("answer");
-        $this->load->model("vote");
 
         try {
-            $ip = $this->input->ip_address();
-
             $answer = $this->answer->getAnswer($pollId, $optionNo);
 
-            $this->vote->vote($answer->id, $ip);
+            $this->answer->vote($answer->id);
             $this->response(NULL, 201);
         }catch (Exception $e){
             $this->response(array("errorMessage"=>"Invalid poll or option!"), 500);
@@ -96,9 +98,12 @@ class Services extends REST_Controller {
      * @param $pollId The id of the poll to delete answers for
      */
     public function votes_delete($pollId) {
-        $this->load->model("vote");
+        $this->load->model("answer");
 
-        $this->vote->deleteVotes($pollId);
-        $this->response(NULL, 200);
+        try {
+            $this->answer->clearVotes($pollId);
+        }catch (Exception $e){
+            $this->response(array("errorMessage"=>"Invalid poll id"), 500);
+        }
     }
 }

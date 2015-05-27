@@ -16,6 +16,8 @@ class Answer extends CI_Model {
     public $pollId;
     public $optionNo;
     public $answer;
+
+    public $votes;
     
     public function __construct() {
         $this->load->database();
@@ -59,6 +61,25 @@ class Answer extends CI_Model {
             $list[] = $answer;
         }
         return $list;
+    }
+
+    /**
+     * Votes for an answer
+     * @param $answerId The answer to vote for
+     */
+    public function vote($answerId) {
+        $this->db->set('votes', 'votes + 1', FALSE);
+        $this->db->where("id", $answerId);
+        $this->db->update("ANSWERS");
+    }
+
+    /**
+     * Clears all votes on a poll
+     * @param $pollId The id of the poll to clear votes on
+     */
+    public function clearVotes($pollId){
+        $this->db->where("pollId", $pollId);
+        $this->db->update("ANSWERS", array("votes" => 0));
     }
     
     /**

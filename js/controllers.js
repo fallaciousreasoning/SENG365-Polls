@@ -39,7 +39,21 @@
           $scope.voted = false;
 
           $scope.vote = function (answer) {
-            //TODO
+              $http.post(votesUrl + "/" + pollId + "/" + answer.optionNo + jsonCallback).success(function () {
+                  $http.jsonp(votesUrl + "/" + pollId + jsonCallback).success(function(data){
+                      for (var i = 0; i < data.length; ++i){
+                          for (var j = 0; j < answers.length; ++j){
+                              if (answers[j].id == data[i].answerId){
+                                  if (!answers[j].votes){
+                                      answers[j].votes = 0;
+                                  }
+                                   answers[j].votes += 1;
+                              }
+                          }
+                      }
+                  });
+              });
+              $scope.voted = true;
           };
 
           $http.jsonp(pollsUrl + "/" + pollId + jsonCallback).success(function(data){

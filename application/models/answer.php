@@ -35,7 +35,6 @@ class Answer extends CI_Model {
         //Escape data before letting it near the data base
         $pollId = (int)$pollId;
         $optionNo = (int)$optionNo;
-        $answer = $this->db->escape($answer);
         $votes = (int)$votes;
 
         $this->db->insert("ANSWERS", array("pollId"=>$pollId, "optionNo"=>$optionNo, "answer"=>$answer, "votes"=>$votes));
@@ -54,7 +53,6 @@ class Answer extends CI_Model {
         $id = (int)$id;
         $pollId = (int)$pollId;
         $optionNo = (int)$optionNo;
-        $answer = $this->db->escape($answer);
 
         $this->db->where("id", $id);
         $this->db->update("ANSWERS", array("pollId"=>$pollId, "optionNo"=>$optionNo, "answer"=>$answer));

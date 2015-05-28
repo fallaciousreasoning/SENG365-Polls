@@ -33,14 +33,19 @@ class Services extends REST_Controller {
      * Should create a new poll object and return a 201 created status
      * with a location header pointing to the newly created poll object
      */
-    public function polls_post(){
+    public function polls_post($pollId=NULL){
+        if ($pollId){
+            $this->polls_put($pollId);
+            return;
+        }
+
         $this->load->model("poll");
         $this->load->model("answer");
 
         $data = json_decode(trim(file_get_contents('php://input')), true);
 
-        //HTML escape any characters that might be displayed
-        $pollId = $this->poll->create(html_escape($data["title"]), html_escape($data["question"]));
+        //Question and title don't need html escaping, angular is magic
+        $pollId = $this->poll->create($data["title"], $data["question"]);
         $answers = $data["answers"];
         $answers_count = count($answers);
 
@@ -48,8 +53,9 @@ class Services extends REST_Controller {
         for ($i = 0; $i < $answers_count; ++$i){
             $answers[$i]["optionNo"] = $i;
             $answers[$i]["questionId"] = $pollId;
-            //HTML escape stuff that might be displayed
-            $this->answer->create($pollId, $i, html_escape($answers[$i]["answer"]));
+
+            //Answer doesn't need html escaping, angular is magic
+            $this->answer->create($pollId, $i, $answers[$i]["answer"]);
         }
 
         header("Location: /services/polls/$pollId");
@@ -57,7 +63,8 @@ class Services extends REST_Controller {
     }
 
     /**
-     * Updates an existing poll and returns a 200
+     * Updates an existing poll and returns a 200. For some reason calling this method
+     * directly has not effect.
      * @param $pollId The id of the poll to update
      */
     public function polls_put($pollId){
@@ -65,9 +72,6 @@ class Services extends REST_Controller {
         $this->load->model("answer");
 
         $data = json_decode(trim(file_get_contents('php://input')), true);
-
-        //Store the old poll
-        $old = $this->poll->getPoll($pollId);
 
         //Makes sure stuff that might be displayed gets escaped properly
         $this->poll->update($pollId, html_escape($data["title"]), html_escape($data["question"]));
@@ -81,10 +85,11 @@ class Services extends REST_Controller {
             $answer["optionNo"] = $i;
             $answer["questionId"] = $pollId;
 
+            //Angular magically doesn't worry about html being escaped
             if (isset($answer["id"])){
-                $this->answer->update($answer["id"], $pollId, $answer["optionNo"], html_escape($answer["answer"]), $answer["votes"]);
+                $this->answer->update($answer["id"], $pollId, $answer["optionNo"], $answer["answer"], $answer["votes"]);
             } else{
-                $this->answer->insert($pollId, $answer["optionNo"], html_escape($answer["answer"]));
+                $this->answer->create($pollId, $answer["optionNo"], $answer["answer"]);
             }
         }
     }

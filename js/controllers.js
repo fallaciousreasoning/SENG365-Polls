@@ -51,6 +51,7 @@
         function ($scope, $http){
             $scope.polls = [];
 
+            $scope.editPaneTitle = "Create a Poll";
             $scope.creating = false;
             $scope.editing = {};
             $scope.answers = []
@@ -86,7 +87,12 @@
                 })
             };
 
+            $scope.cancel = function () {
+                $scope.creating = false;
+            }
+
             $scope.beginCreate = function () {
+                $scope.editPaneTitle = "Create a Poll";
                 $scope.creating = true;
                 $scope.editing = {title:"", question:""};
                 $scope.answers = [];
@@ -94,9 +100,18 @@
                 $scope.addAnswer();
             }
 
+            $scope.edit = function (poll) {
+                if (!poll) {
+                    return;
+                }
+                $scope.editPaneTitle = "Edit Poll"
+                $scope.editing = poll;
+                $scope.answers = poll.answers;
+                $scope.creating = true;
+            }
+
             $scope.addAnswer = function () {
                 $scope.answers.push({
-                    optionNo: $scope.answers.length,
                     answer: ""
                 });
             }

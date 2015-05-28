@@ -38,12 +38,12 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#"><span class="glyphicon glyphicon-home"></span></a>
+                <a class="navbar-brand" href="#"><span class="glyphicon glyphicon-home nav-header"></span>Home</a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li><a class="nav navbar-brand" href="#/admin"><span class="glyphicon glyphicon-pencil"></a></li>
-                    <li><a class="nav navbar-brand" href="#/about"><span class="glyphicon glyphicon-info-sign"></a></li>
+                    <li><a class="navbar-brand" href="#/admin"><span class="glyphicon glyphicon-pencil nav-header">Admin</a></li>
+                    <li><a class="navbar-brand" href="#/about"><span class="glyphicon glyphicon-info-sign nav-header">About</a></li>
                 </ul>
             </div>
         </nav>

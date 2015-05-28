@@ -6,11 +6,15 @@
     <table class="table title">
         <tr>
             <th>Poll</th>
+            <th>Edit</th>
             <th>Reset</th>
             <th>Delete</th>
         </tr>
         <tr ng-repeat="poll in polls">
             <td>{{poll.title}}</td>
+            <td>
+                <button class="btn btn-default" ng-click="edit(poll)">Edit</button>
+            </td>
             <td>
                 <!--<a ng-click="reset(poll)">Reset</a>-->
                 <button class="btn btn-default" ng-click="reset(poll)">Reset</button>
@@ -24,14 +28,14 @@
 <button class="btn btn-primary" ng-click="beginCreate()" ng-show="!creating">Add</button>
 <div class="panel panel-default" ng-show="creating">
     <div class="panel-heading">
-        Create Poll
+        {{editPaneTitle}}
     </div>
     <ul class="list-group panel-body">
         <li class="list-group-item">
             Poll Title <input class="form-control" ng-model="editing.title"/>
         </li>
         <li class="list-group-item">
-            Question <input class="form-control" ng-model="editing.question">
+            Question <input class="form-control" ng-model="editing.question"/>
         </li>
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -45,6 +49,7 @@
             </ul>
         </div>
         <button class="btn btn-default" ng-click="addAnswer()">Add Answer</button>
-        <button class="btn btn-primary" ng-click="create()">Save</button>
+        <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-primary" ng-click="create()">Done</button>
     </ul>
 </div>

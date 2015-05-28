@@ -21,3 +21,30 @@
         </tr>
     </table>
 </div>
+<button class="btn btn-primary" ng-click="beginCreate()" ng-show="!creating">Add</button>
+<div class="panel panel-default" ng-show="creating">
+    <div class="panel-heading">
+        Create Poll
+    </div>
+    <ul class="list-group panel-body">
+        <li class="list-group-item">
+            Poll Title <input class="form-control" ng-model="editing.title"/>
+        </li>
+        <li class="list-group-item">
+            Question <input class="form-control" ng-model="editing.question">
+        </li>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Answers
+            </div>
+            <ul class="list-group panel-body">
+                <li class="list-group-item" ng-repeat="answer in answers">
+                    Answer
+                    <input class="form-control" ng-model="answer.answer"/>
+                </li>
+            </ul>
+        </div>
+        <button class="btn btn-default" ng-click="addAnswer()">Add Answer</button>
+        <button class="btn btn-primary" ng-click="create()">Save</button>
+    </ul>
+</div>

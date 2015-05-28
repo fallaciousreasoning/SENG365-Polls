@@ -51,8 +51,54 @@
         function ($scope, $http){
             $scope.polls = [];
 
-            $http.jsonp(pollsUrl + jsonCallback).success(function(data){
-                $scope.polls = data;
-            });
+            $scope.creating = false;
+            $scope.editing = {};
+            $scope.answers = []
+
+            $scope.refreshPolls = function(){
+                $http.jsonp(pollsUrl + jsonCallback).success(function(data){
+                    $scope.polls = data;
+                });
+            };
+
+            $scope.refreshPolls();
+
+            $scope.delete = function (poll) {
+                $http.delete(pollsUrl + '/' + poll.id).success(
+                    function(){
+                        $scope.refreshPolls();
+                    });
+            };
+
+            $scope.reset = function (poll) {
+                $http.delete(votesUrl + '/' + poll.id).success(
+                    function(){
+                        //Do nothing, we don't display votes here.
+                    });
+            };
+
+            $scope.create = function () {
+                console.log($scope.editing);
+                console.log($scope.answers);
+
+                $http.post(pollsUrl, $scope.poll).success(function() {
+                    $scope.refreshPolls();
+                })
+            };
+
+            $scope.beginCreate = function () {
+                $scope.creating = true;
+                $scope.editing = {title:"", question:""};
+                $scope.answers = [];
+                $scope.addAnswer();
+                $scope.addAnswer();
+            }
+
+            $scope.addAnswer = function () {
+                $scope.answers.push({
+                    optionNo: $scope.answers.length,
+                    answer: ""
+                });
+            }
         }]);
   }())

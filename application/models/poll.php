@@ -94,7 +94,7 @@ class Poll extends CI_Model {
         $this->load->model('answer');
 
         $this->db->delete("POLLS", array("id"=>$pollId));
-        $this->db->delete("ANSWERS", array("pollId"=>$pollId));
+        $this->answer->deleteAll($pollId);
     }
     
     /**

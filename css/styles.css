@@ -26,3 +26,10 @@
 .vote {
 	font-weight: bold; 
 }
+
+.answerList { width: 100%; }
+.answerList td { width: 1px; }
+.answerList td:first-child {
+    width: 100%;
+    margin-right: 10px;
+}

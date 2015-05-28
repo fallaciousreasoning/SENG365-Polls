@@ -73,11 +73,14 @@ class Services extends REST_Controller {
 
         $data = json_decode(trim(file_get_contents('php://input')), true);
 
-        //Makes sure stuff that might be displayed gets escaped properly
-        $this->poll->update($pollId, html_escape($data["title"]), html_escape($data["question"]));
+        //Angular magically escapes stuff
+        $this->poll->update($pollId, $data["title"], $data["question"]);
 
         $answers = $data["answers"];
         $answers_count = count($answers);
+
+        //Remove all existing answers
+        $this->answer->deleteAll($pollId);
 
         for ($i = 0; $i < $answers_count; ++$i) {
             $answer = $answers[$i];
@@ -86,11 +89,11 @@ class Services extends REST_Controller {
             $answer["questionId"] = $pollId;
 
             //Angular magically doesn't worry about html being escaped
-            if (isset($answer["id"])){
-                $this->answer->update($answer["id"], $pollId, $answer["optionNo"], $answer["answer"], $answer["votes"]);
-            } else{
-                $this->answer->create($pollId, $answer["optionNo"], $answer["answer"]);
+            $votes  = 0;
+            if (isset($data["votes"])){
+                $votes = $data["votes"];
             }
+            $this->answer->create($pollId, $answer["optionNo"], $answer["answer"], $votes);
         }
     }
 

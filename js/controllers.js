@@ -54,16 +54,25 @@
             $scope.mode = "";
             $scope.creating = false;
             $scope.editing = {};
-            $scope.answers = []
+            $scope.answers = [];
+            $scope.canRemoveAnswers = false;
 
+            /**
+             * Refreshes the list of polls
+             */
             $scope.refreshPolls = function(){
                 $http.jsonp(pollsUrl + jsonCallback).success(function(data){
                     $scope.polls = data;
                 });
             };
 
+            //Load the polls for the first time
             $scope.refreshPolls();
 
+            /**
+             * Deletes a poll
+             * @param poll The poll to delete
+             */
             $scope.delete = function (poll) {
                 $http.delete(pollsUrl + '/' + poll.id).success(
                     function(){
@@ -71,6 +80,10 @@
                     });
             };
 
+            /**
+             * Resets all the votes on a poll
+             * @param poll
+             */
             $scope.reset = function (poll) {
                 $http.delete(votesUrl + '/' + poll.id).success(
                     function(){
@@ -78,6 +91,12 @@
                     });
             };
 
+            /**
+             * Creates a new poll or updates
+             * an existing one depending on whether
+             * or not the poll being edited has an
+             * id or not
+             */
             $scope.create = function () {
                 $scope.editing.answers = $scope.answers;
 
@@ -94,10 +113,16 @@
                 }
             };
 
+            /**
+             * Cancels creation or editing
+             */
             $scope.cancel = function () {
                 $scope.creating = false;
             }
 
+            /**
+             * Starts creating a new poll
+             */
             $scope.beginCreate = function () {
                 $scope.mode = "create";
                 $scope.creating = true;
@@ -105,8 +130,15 @@
                 $scope.answers = [];
                 $scope.addAnswer();
                 $scope.addAnswer();
+
+                //Update whether we can remove answers
+                $scope.canRemoveAnswers = $scope.answers.length > 2;
             }
 
+            /**
+             * Starts editing an existing poll
+             * @param poll The poll to edit
+             */
             $scope.edit = function (poll) {
                 if (!poll) {
                     return;
@@ -115,12 +147,38 @@
                 $scope.editing = poll;
                 $scope.answers = poll.answers;
                 $scope.creating = true;
+
+                //Update whether we can remove answers
+                $scope.canRemoveAnswers = $scope.answers.length > 2;
             }
 
+            /**
+             * Adds an answer to the poll being edited
+             */
             $scope.addAnswer = function () {
                 $scope.answers.push({
                     answer: ""
                 });
+            }
+
+            /**
+             * Removes an existing answer from the poll
+             * being edited
+             * @param answer The answer to remove
+             */
+            $scope.removeAnswer = function (answer){
+                for (var i = 0; i < $scope.answers.length; ++i){
+                    console.log("Got here")
+                    if ($scope.answers[i] == answer){
+                        $scope.answers.splice(i, 1);
+                        i--;
+                        //Assume there's only one instance of this object in the array
+                        break;
+                    }
+                }
+
+                //Update whether we can remove answers
+                $scope.canRemoveAnswers = $scope.answers.length > 2;
             }
         }]);
   }())

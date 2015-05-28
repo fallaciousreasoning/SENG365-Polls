@@ -44,7 +44,12 @@
             <ul class="list-group panel-body">
                 <li class="list-group-item" ng-repeat="answer in answers">
                     Answer
-                    <input class="form-control" ng-model="answer.answer"/>
+                    <table class="answerList">
+                        <tr>
+                            <td><input class="form-control" ng-model="answer.answer"/></td>
+                            <td><button class="btn btn-remove" ng-disable="!canRemoveAnswers" ng-click="removeAnswer(answer)">Delete</button></td>
+                        </tr>
+                    </table>
                 </li>
             </ul>
         </div>

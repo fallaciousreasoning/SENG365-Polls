@@ -129,6 +129,14 @@ class Answer extends CI_Model {
         $this->db->where("pollId", $pollId);
         $this->db->update("ANSWERS", array("votes" => 0));
     }
+
+    /**
+     * Deletes all the answers for the specific poll
+     * @param $pollId The id of the poll to delete answers for
+     */
+    public function deleteAll($pollId){
+        $this->db->delete("ANSWERS", array("pollId"=>$pollId));
+    }
     
     /**
      * Loads a row from the database into a answer object

@@ -34,7 +34,24 @@ class Services extends REST_Controller {
      * with a location header pointing to the newly created poll object
      */
     public function polls_post(){
+        $this->load->model("poll");
+        $this->load->model("answer");
 
+        $data = json_decode(trim(file_get_contents('php://input')), true);
+
+        $pollId = $this->poll->create($data["title"], $data["question"]);
+        $answers = $data["answers"];
+        $answers_count = count($answers);
+
+        //Insert all the answers
+        for ($i = 0; $i < $answers_count; ++$i){
+            $answers[$i]["optionNo"] = $i;
+            $answers[$i]["questionId"] = $pollId;
+            $this->answer->create($pollId, $i, $answers[$i]["answer"]);
+        }
+
+        header("Location: /services/polls/$pollId");
+        $this->response(NULL, 201);
     }
 
     /**

@@ -24,6 +24,19 @@ class Answer extends CI_Model {
     }
 
     /**
+     * Creates a new answer
+     * @param $pollId The id of the question the answer is for
+     * @param $optionNo The option number of the answer
+     * @param $answer The answer
+     * @param int $votes The number of votes. Defaults to 0
+     * @return mixed The insert id
+     */
+    public function create($pollId, $optionNo, $answer, $votes=0){
+        $this->db->insert("ANSWERS", array("pollId"=>$pollId, "optionNo"=>$optionNo, "answer"=>$answer, "votes"=>$votes));
+        return $this->db->insert_id();
+    }
+
+    /**
      * Gets an option from within a poll
      * @param type $pollId The id of the poll
      * @param type $optionNo The number of the option within the poll

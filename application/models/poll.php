@@ -23,6 +23,17 @@ class Poll extends CI_Model {
         $this->load->database();
         $this->load->model('answer');
     }
+
+    /**
+     * Inserts a new poll into the database
+     * @param $title The title of the poll
+     * @param $question The question the poll is asking
+     * @return mixed The index the poll was inserted at
+     */
+    public function create($title, $question){
+        $this->db->insert("POLLS", array("title"=>$title,"question"=>$question));
+        return $this->db->insert_id();
+    }
     
     /** Return an array of all polls in the database.
      * @return an array of Poll objects containing all polls, ordered

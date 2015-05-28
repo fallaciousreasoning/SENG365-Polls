@@ -78,11 +78,11 @@
             };
 
             $scope.create = function () {
-                console.log($scope.editing);
-                console.log($scope.answers);
+                $scope.editing.answers = $scope.answers;
 
-                $http.post(pollsUrl, $scope.poll).success(function() {
+                $http.post(pollsUrl, $scope.editing).success(function() {
                     $scope.refreshPolls();
+                    $scope.creating = false;
                 })
             };
 

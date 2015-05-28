@@ -39,7 +39,8 @@ class Services extends REST_Controller {
 
         $data = json_decode(trim(file_get_contents('php://input')), true);
 
-        $pollId = $this->poll->create($data["title"], $data["question"]);
+        //HTML escape any characters that might be displayed
+        $pollId = $this->poll->create(html_escape($data["title"]), html_escape($data["question"]));
         $answers = $data["answers"];
         $answers_count = count($answers);
 
@@ -47,7 +48,8 @@ class Services extends REST_Controller {
         for ($i = 0; $i < $answers_count; ++$i){
             $answers[$i]["optionNo"] = $i;
             $answers[$i]["questionId"] = $pollId;
-            $this->answer->create($pollId, $i, $answers[$i]["answer"]);
+            //HTML escape stuff that might be displayed
+            $this->answer->create($pollId, $i, html_escape($answers[$i]["answer"]));
         }
 
         header("Location: /services/polls/$pollId");
@@ -59,7 +61,32 @@ class Services extends REST_Controller {
      * @param $pollId The id of the poll to update
      */
     public function polls_put($pollId){
+        $this->load->model("poll");
+        $this->load->model("answer");
 
+        $data = json_decode(trim(file_get_contents('php://input')), true);
+
+        //Store the old poll
+        $old = $this->poll->getPoll($pollId);
+
+        //Makes sure stuff that might be displayed gets escaped properly
+        $this->poll->update($pollId, html_escape($data["title"]), html_escape($data["question"]));
+
+        $answers = $data["answers"];
+        $answers_count = count($answers);
+
+        for ($i = 0; $i < $answers_count; ++$i) {
+            $answer = $answers[$i];
+
+            $answer["optionNo"] = $i;
+            $answer["questionId"] = $pollId;
+
+            if (isset($answer["id"])){
+                $this->answer->update($answer["id"], $pollId, $answer["optionNo"], html_escape($answer["answer"]), $answer["votes"]);
+            } else{
+                $this->answer->insert($pollId, $answer["optionNo"], html_escape($answer["answer"]));
+            }
+        }
     }
 
     /**

@@ -31,8 +31,28 @@ class Poll extends CI_Model {
      * @return mixed The index the poll was inserted at
      */
     public function create($title, $question){
+        //Escape data before letting it near the database
+        $title = $this->db->escape($title);
+        $question = $this->db->escape($question);
+
         $this->db->insert("POLLS", array("title"=>$title,"question"=>$question));
         return $this->db->insert_id();
+    }
+
+    /**
+     * Updates a poll
+     * @param $pollId The id of the poll to update
+     * @param $title for the poll
+     * @param $question the question for the poll
+     */
+    public function update($pollId, $title, $question){
+        //Escape data before letting it near the database
+        $pollId = (int)$pollId;
+        $title = $this->db->escape($title);
+        $question = $this->db->escape($question);
+
+        $this->db->where("id", $pollId);
+        $this->db->update("POLLS", array("title"=>$title, "question"=>$question));
     }
     
     /** Return an array of all polls in the database.
@@ -57,6 +77,9 @@ class Poll extends CI_Model {
      * @return Poll The poll
      */
     public function getPoll($pollId){
+        //Escape the pollId
+        $pollId = (int)$pollId;
+
         $poll = new Poll();
         $query = $this->db->get_where('POLLS', array('id'=>$pollId));
         if ($query->num_rows !== 1) {
@@ -77,6 +100,9 @@ class Poll extends CI_Model {
      * @param $pollId The id of the poll to delete
      */
     public function deleteRecursive($pollId){
+        //Escape the pollId
+        $pollId = (int)$pollId;
+
         $this->load->model('answer');
 
         $this->db->delete("POLLS", array("id"=>$pollId));

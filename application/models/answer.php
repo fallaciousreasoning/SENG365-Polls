@@ -32,8 +32,32 @@ class Answer extends CI_Model {
      * @return mixed The insert id
      */
     public function create($pollId, $optionNo, $answer, $votes=0){
+        //Escape data before letting it near the data base
+        $pollId = (int)$pollId;
+        $optionNo = (int)$optionNo;
+        $answer = $this->db->escape($answer);
+        $votes = (int)$votes;
+
         $this->db->insert("ANSWERS", array("pollId"=>$pollId, "optionNo"=>$optionNo, "answer"=>$answer, "votes"=>$votes));
         return $this->db->insert_id();
+    }
+
+    /**
+     * Updates an existing answer
+     * @param $id The id of the answer to update
+     * @param $pollId The new poll id
+     * @param $optionNo The new option no
+     * @param $answer The answer
+     */
+    public function update($id, $pollId, $optionNo, $answer){
+        //Escape data before letting it near the database
+        $id = (int)$id;
+        $pollId = (int)$pollId;
+        $optionNo = (int)$optionNo;
+        $answer = $this->db->escape($answer);
+
+        $this->db->where("id", $id);
+        $this->db->update("ANSWERS", array("pollId"=>$pollId, "optionNo"=>$optionNo, "answer"=>$answer));
     }
 
     /**
@@ -44,6 +68,10 @@ class Answer extends CI_Model {
      * @throws Exception If more than 1 row or no rows were found.
      */
     public function getAnswer($pollId, $optionNo){
+        //Escape the pollId and optionNo
+        $pollId = (int)$pollId;
+        $optionNo = (int)$optionNo;
+
         $answer = new Answer();
         $query = $this->db->get_where('ANSWERS', array('pollId'=>$pollId, 'optionNo'=>$optionNo));
         if ($query->num_rows !== 1) {
@@ -65,6 +93,9 @@ class Answer extends CI_Model {
      * @return an array of answers to the poll ordered by their optionNo
     */
     public function getAnswers($pollId) {
+        //Escape the pollId
+        $pollId = (int)$pollId;
+
         $this->db->order_by('optionNo');
         $rows = $this->db->get_where('ANSWERS', array('pollId'=>$pollId))->result();
         $list = array();
@@ -81,6 +112,9 @@ class Answer extends CI_Model {
      * @param $answerId The answer to vote for
      */
     public function vote($answerId) {
+        //Escape the answerId
+        $answerId = (int)$answerId;
+
         $this->db->set('votes', 'votes + 1', FALSE);
         $this->db->where("id", $answerId);
         $this->db->update("ANSWERS");
@@ -91,6 +125,9 @@ class Answer extends CI_Model {
      * @param $pollId The id of the poll to clear votes on
      */
     public function clearVotes($pollId){
+        //Escape the pollId
+        $pollId = (int)$pollId;
+
         $this->db->where("pollId", $pollId);
         $this->db->update("ANSWERS", array("votes" => 0));
     }

@@ -9,6 +9,23 @@
         <p>
             The aim of this application is to be a client side app for viewing polls which requests the data it needs
             via rest API calls. The rest API supports the following methods.
+
+        <h3>Features</h3>
+        <ul class="list-group panel-body">
+            <li class="list-group-item">
+                <a href="#/polls">View Polls</a>
+            </li>
+            <li class="list-group-item">
+                <a href="#polls/1">Vote on Polls and View Votes</a>
+                (note: This link won't take you anywhere if you don't have any polls)
+            </li>
+            <li class="list-group-item">
+                <a href="#/admin">Administer Polls</a> From here you can add, remove and edit polls
+            </li>
+            <li class="list-group-item">
+                <a href="#/about">View an Awesome About Page</a> (if you're seeing this you probably don't need the link...)
+            </li>
+        </ul>
         </p>
     </div>
 </div>
@@ -31,13 +48,21 @@
     </div>
     <div class="panel-body">
         <p>
-            If you have a slow internet connection it is sometimes possible to vote multiple
-            times in a poll (as the client waits until it has relieved the list of votes from
-            the server before disabling voting).
-
-            Another problem I ran into was that I couldn't access put data in code igniter.
-            As a temporary fix for this I have wrapped the put method in the post, so posting
-            to /services/polls/{pollId} will update an existing poll.
+            <p>
+                If you have a slow internet connection it is sometimes possible to vote multiple
+                times in a poll (as the client waits until it has relieved the list of votes from
+                the server before disabling voting).
+            </p>
+            <p>
+                Another problem I ran into was that I couldn't access put data in code igniter.
+                As a temporary fix for this I have wrapped the put method in the post, so posting
+                to /services/polls/{pollId} will update an existing poll.
+            </p>
+            <p>
+                You can also save a poll with blank fields (such as the title, question or any of the answers). On a related
+                note you can also save polls with no answers...). What I'm trying to say is I don't really check if your
+                polls are valid :/
+            </p>
         </p>
     </div>
 </div>
@@ -161,6 +186,11 @@
         </li>
         <li class="list-group-item">
             <a href="https://jquery.com/">jQuery</a> because browsers are tempermental (and Bootstrap thinks it's cool).
+        </li>
+        <li class="list-group-item">
+            <a href="https://github.com/chriskacerguis/codeigniter-restserver">CodeIgniter REST-Server</a> as it makes
+            creating a REST-API painless (although it somehow breaks accessing PUT data which is BAD!). Apart from that
+            its an awesome little library.
         </li>
     </ul>
 </div>

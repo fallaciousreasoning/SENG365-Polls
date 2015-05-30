@@ -34,6 +34,10 @@
             If you have a slow internet connection it is sometimes possible to vote multiple
             times in a poll (as the client waits until it has relieved the list of votes from
             the server before disabling voting).
+
+            Another problem I ran into was that I couldn't access put data in code igniter.
+            As a temporary fix for this I have wrapped the put method in the post, so posting
+            to /services/polls/{pollId} will update an existing poll.
         </p>
     </div>
 </div>
@@ -43,6 +47,120 @@
         <h3 class="panel-title">REST API</h3>
     </div>
     <div class="panel-body">
+        The REST services provided by this program can be accessed by {BASEURL}/services/{query}. In all cases the
+        program will respond with a 404 if something goes wrong or a 20X if all is right in the world. Now, to the details.
 
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Service URL</th>
+                    <th>Method</th>
+                    <th>Request Data</th>
+                    <th>Response Data</th>
+                    <th>Explanation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{BASEURL}/index.php/service/polls</td>
+                    <td>GET</td>
+                    <td>None</td>
+                    <td>
+                        200 OK and a JSON list of polls.
+                        Each poll is a JSON object with an
+                        id, title, question and a list of
+                        answers
+                    </td>
+                    <td>Gets a list of all available polls</td>
+                </tr>
+                <tr>
+                    <td>{BASEURL}/index.php/service/polls/{pollId}</td>
+                    <td>GET</td>
+                    <td>None</td>
+                    <td>
+                        200 OK and a JSON object representing the poll
+                        with the specified id. If the id doesn't represent
+                        a valid poll a 404 will be returned.
+                    </td>
+                    <td>Gets a specific poll</td>
+                </tr>
+                <tr>
+                    <td>{BASEURL}/index.php/service/polls</td>
+                    <td>POST</td>
+                    <td>A JSON object representing the poll to create</td>
+                    <td>
+                        201 if the poll was successfully created or a
+                        404 if something went wrong
+                    </td>
+                    <td>Creates a new poll</td>
+                </tr>
+                <tr>
+                    <td>{BASEURL}/index.php/service/polls/{pollId}</td>
+                    <td>POST</td>
+                    <td>A JSON object representing the poll to update</td>
+                    <td>
+                        200 if the poll was successfully updated or a
+                        404 if something went wrong
+                    </td>
+                    <td>Updates an existing poll. Note, in the original specification this method was meant to be PUT, however, the CodeIgniter library I was using to make a rest service had significant problems with PUT, so I have made it POST as a workaround</td>
+                </tr>
+                <tr>
+                    <td>{BASEURL}/index.php/service/polls/{pollId}</td>
+                    <td>DELETE</td>
+                    <td>None</td>
+                    <td>
+                        200 if the poll was successfully deleted
+                    </td>
+                    <td>Deletes an existing poll</td>
+                </tr>
+                <tr>
+                    <td>{BASEURL}/index.php/service/votes/{pollId}/{optionNo}</td>
+                    <td>POST</td>
+                    <td>None</td>
+                    <td>None</td>
+                    <td>Votes for a an option within a poll. {pollId} is the id of the poll to vote for
+                    and {optionNo} is the option within the poll to vote for</td>
+                </tr>
+                <tr>
+                    <td>{BASEURL}/index.php/service/votes/{pollId}</td>
+                    <td>GET</td>
+                    <td>None</td>
+                    <td>
+                        200 ok and a list of all votes on a poll of the form {0, 1,  5}
+                        where the index of the vote count is the same as that
+                        as the optionNumber of an answer within the poll. 404 if the
+                        pollId is invalid.
+                    </td>
+                    <td>Gets a list of all votes within a poll. {pollId} is the id
+                    of the poll to get votes for</td>
+                </tr>
+                <tr>
+                    <td>{BASEURL}/index.php/service/votes/{pollId}</td>
+                    <td>DELETE</td>
+                    <td>None</td>
+                    <td>
+                        200 ok.
+                    </td>
+                    <td>Resets the votes on a poll. {pollId} is the id of the poll to reset</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">External Libraries</h3>
+    </div>
+    <ul class="list-group panel-body">
+        <li class="list-group-item">
+            <a href="http://getbootstrap.com/getting-started/">Bootstrap</a> for styling and generally looking pretty cool.
+        </li>
+        <li class="list-group-item">
+            <a href="https://angularjs.org/">Angular.js</a> for making a cool and responsive website. MVVM is the best.
+        </li>
+        <li class="list-group-item">
+            <a href="https://jquery.com/">jQuery</a> because browsers are tempermental (and Bootstrap thinks it's cool).
+        </li>
+    </ul>
 </div>

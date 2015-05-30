@@ -179,6 +179,7 @@
 
                 //Update whether we can remove answers
                 $scope.canRemoveAnswers = $scope.answers.length > 2;
+                console.log($scope.canRemoveAnswers);
             }
         }]);
   }())

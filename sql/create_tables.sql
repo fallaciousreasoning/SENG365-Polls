@@ -52,15 +52,15 @@ CREATE TABLE IF NOT EXISTS `ANSWERS` (
 -- Generate the first poll about php with four answers and three votes for 'There are people who aren't'
 INSERT INTO POLLS (id, title, question) VALUES (1, "(in)sane", "Are you insane?");
 
-INSERT INTO ANSWERS(pollId, optionNo, answer, votes) VALUES (1,1,"Yes", 5);
+INSERT INTO ANSWERS(pollId, optionNo, answer, votes) VALUES (1,1,"No! (I'm just mildly mad)", 5);
 INSERT INTO ANSWERS(pollId, optionNo, answer, votes) VALUES (1,2,"Without a doubt.", 0);
 INSERT INTO ANSWERS(pollId, optionNo, answer, votes) VALUES (1,3,"Clearly", 7);
 INSERT INTO ANSWERS(pollId, optionNo, answer, votes) VALUES (1,4,"There are people who aren't?", 1);
 
 -- Generate the second poll. You can only love php
-INSERT INTO POLLS (id, title, question) VALUES (2, "PHP", "How much do you love PHP?");
+INSERT INTO POLLS (id, title, question) VALUES (2, "Of Course..", "What's this course?");
 
-INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (2,1,"..uum... Do I have to answer?");
-INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (2,2,"...");
-INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (2,3,"It's alright, I suppose.");
+INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (2,1,"..uum...");
+INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (2,2,"SENG ..eer something?");
+INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (2,3,"One with programming and stuff?");
 INSERT INTO ANSWERS(pollId, optionNo, answer, votes) VALUES (2,4,"NO.", 10);

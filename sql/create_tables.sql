@@ -55,12 +55,20 @@ INSERT INTO POLLS (id, title, question) VALUES (1, "(in)sane", "Are you insane?"
 INSERT INTO ANSWERS(pollId, optionNo, answer, votes) VALUES (1,1,"No! (I'm just mildly mad)", 5);
 INSERT INTO ANSWERS(pollId, optionNo, answer, votes) VALUES (1,2,"Without a doubt.", 0);
 INSERT INTO ANSWERS(pollId, optionNo, answer, votes) VALUES (1,3,"Clearly", 7);
+
 INSERT INTO ANSWERS(pollId, optionNo, answer, votes) VALUES (1,4,"There are people who aren't?", 1);
 
--- Generate the second poll. You can only love php
+-- Generate the second poll. Do you remember what you're doing here?
 INSERT INTO POLLS (id, title, question) VALUES (2, "Of Course..", "What's this course?");
 
 INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (2,1,"..uum...");
 INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (2,2,"SENG ..eer something?");
 INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (2,3,"One with programming and stuff?");
 INSERT INTO ANSWERS(pollId, optionNo, answer, votes) VALUES (2,4,"NO.", 10);
+
+-- Generate the third poll. You must know the question
+INSERT INTO POLLS (id, title, question) VALUES (2, "The question", "What... is the air-speed velocity of an unladen swallow?");
+
+INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (3,1,"What do you mean? An African or European swallow?");
+INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (3,2,"Huh? I... I don't know that.", 3);
+INSERT INTO ANSWERS(pollId, optionNo, answer) VALUES (3,3,"Blue", 2);

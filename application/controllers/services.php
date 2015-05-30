@@ -21,7 +21,7 @@ class Services extends REST_Controller {
                 $poll = $this->poll->getPoll($pollId);
                 $this->response($poll, 200);
             }catch (Exception $e){
-                $this->response(array("errorMessage"=>"Invalid poll Id!"), 500);
+                $this->response(array("errorMessage"=>"Poll does not exist!"), 404);
             }
         } else{
             $polls = $this->poll->getPolls();
@@ -34,6 +34,7 @@ class Services extends REST_Controller {
      * with a location header pointing to the newly created poll object
      */
     public function polls_post($pollId=NULL){
+        //Temporary workaround as I can't access PUT data for some reason
         if ($pollId){
             $this->polls_put($pollId);
             return;
@@ -42,58 +43,68 @@ class Services extends REST_Controller {
         $this->load->model("poll");
         $this->load->model("answer");
 
-        $data = json_decode(trim(file_get_contents('php://input')), true);
+        try {
+            $data = json_decode(trim(file_get_contents('php://input')), true);
 
-        //Question and title don't need html escaping, angular is magic
-        $pollId = $this->poll->create($data["title"], $data["question"]);
-        $answers = $data["answers"];
-        $answers_count = count($answers);
+            //Question and title don't need html escaping, angular is magic
+            $pollId = $this->poll->create($data["title"], $data["question"]);
+            $answers = $data["answers"];
+            $answers_count = count($answers);
 
-        //Insert all the answers
-        for ($i = 0; $i < $answers_count; ++$i){
-            $answers[$i]["optionNo"] = $i;
-            $answers[$i]["questionId"] = $pollId;
+            //Insert all the answers
+            for ($i = 0; $i < $answers_count; ++$i) {
+                $answers[$i]["optionNo"] = $i;
+                $answers[$i]["questionId"] = $pollId;
 
-            //Answer doesn't need html escaping, angular is magic
-            $this->answer->create($pollId, $i, $answers[$i]["answer"]);
+                //Answer doesn't need html escaping, angular is magic
+                $this->answer->create($pollId, $i, $answers[$i]["answer"]);
+            }
+
+            header("Location: /services/polls/$pollId");
+            $this->response(NULL, 201);
+        }catch (Exception $e){
+            $this->response(array("errorMessage"=>"Unable to create poll!"), 404);
         }
-
-        header("Location: /services/polls/$pollId");
-        $this->response(NULL, 201);
     }
 
     /**
      * Updates an existing poll and returns a 200. For some reason calling this method
-     * directly has not effect.
+     * directly has not effect. This method has been private, as I can't seem to access
+     * put data :'(. You can call it through POST
      * @param $pollId The id of the poll to update
      */
-    public function polls_put($pollId){
+    private function polls_put($pollId){
         $this->load->model("poll");
         $this->load->model("answer");
 
         $data = json_decode(trim(file_get_contents('php://input')), true);
 
-        //Angular magically escapes stuff
-        $this->poll->update($pollId, $data["title"], $data["question"]);
+        try {
+            //Angular magically escapes stuff
+            $this->poll->update($pollId, $data["title"], $data["question"]);
 
-        $answers = $data["answers"];
-        $answers_count = count($answers);
+            $answers = $data["answers"];
+            $answers_count = count($answers);
 
-        //Remove all existing answers
-        $this->answer->deleteAll($pollId);
+            //Remove all existing answers
+            $this->answer->deleteAll($pollId);
 
-        for ($i = 0; $i < $answers_count; ++$i) {
-            $answer = $answers[$i];
+            for ($i = 0; $i < $answers_count; ++$i) {
+                $answer = $answers[$i];
 
-            $answer["optionNo"] = $i;
-            $answer["questionId"] = $pollId;
+                $answer["optionNo"] = $i;
+                $answer["questionId"] = $pollId;
 
-            //Angular magically doesn't worry about html being escaped
-            $votes  = 0;
-            if (isset($data["votes"])){
-                $votes = $data["votes"];
+                //Angular magically doesn't worry about html being escaped
+                $votes = 0;
+                if (isset($data["votes"])) {
+                    $votes = $data["votes"];
+                }
+                $this->answer->create($pollId, $answer["optionNo"], $answer["answer"], $votes);
             }
-            $this->answer->create($pollId, $answer["optionNo"], $answer["answer"], $votes);
+        }
+        catch (Exception $e){
+            $this->response(array("errorMessage"=>"Unable to update poll"), 404);
         }
     }
 
@@ -107,7 +118,7 @@ class Services extends REST_Controller {
         try {
             $this->poll->deleteRecursive($pollId);
         }catch (Exception $e){
-            $this->response(array("errorMessage"=>"Invalid poll Id!"), 500);
+            $this->response(array("errorMessage"=>"No such poll :'("), 404);
         }
     }
 
@@ -118,13 +129,17 @@ class Services extends REST_Controller {
     public function votes_get($pollId){
         $this->load->model("answer");
 
-        $answers = $this->answer->getAnswers($pollId);
-        $votes = array();
-        foreach ($answers as $answer){
-            $votes[] = $answer->votes;
-        }
+        try {
+            $answers = $this->answer->getAnswers($pollId);
+            $votes = array();
+            foreach ($answers as $answer) {
+                $votes[] = $answer->votes;
+            }
 
-        $this->response($votes, 200);
+            $this->response($votes, 200);
+        }catch (Exception $e){
+            $this->response(array("errorMessage"=>"Poll does not exist!"), 404);
+        }
     }
 
     /**
@@ -141,7 +156,7 @@ class Services extends REST_Controller {
             $this->answer->vote($answer->id);
             $this->response(NULL, 201);
         }catch (Exception $e){
-            $this->response(array("errorMessage"=>"Invalid poll or option!"), 500);
+            $this->response(array("errorMessage"=>"The poll or option does not exist!"), 404);
         }
     }
 
@@ -155,7 +170,7 @@ class Services extends REST_Controller {
         try {
             $this->answer->clearVotes($pollId);
         }catch (Exception $e){
-            $this->response(array("errorMessage"=>"Invalid poll id"), 500);
+            $this->response(array("errorMessage"=>"The poll does not exist!"), 404);
         }
     }
 }

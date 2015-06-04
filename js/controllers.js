@@ -104,13 +104,25 @@
                     $http.post(pollsUrl, $scope.editing).success(function () {
                         $scope.refreshPolls();
                         $scope.creating = false;
-                    });
+                    }).error($scope.showError);
                 }else{
                     $http.post(pollsUrl + "/" + $scope.editing.id, $scope.editing).success(function () {
                         $scope.refreshPolls();
                         $scope.creating = false;
-                    });
+                    }).error($scope.showError);
                 }
+            };
+
+            /**
+             * Shows any errors that occured during creation
+             * @param error The error
+             */
+            $scope.showError  = function(error){
+                var errorText = "";
+                for (var i = 0; i < error.errors.length; ++i){
+                    errorText += error.errors[i] + "\n";
+                }
+                alert(errorText);
             };
 
             /**

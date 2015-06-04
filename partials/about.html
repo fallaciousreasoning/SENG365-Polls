@@ -44,7 +44,7 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">Known Bugs</h3>
+        <h3 class="panel-title">Known Bugs (and things I dislike)</h3>
     </div>
     <div class="panel-body">
         <p>
@@ -59,10 +59,8 @@
                 to /services/polls/{pollId} will update an existing poll.
             </p>
             <p>
-                You can submit an invalid poll from the poll creation form (although it won't be added/updated in the
-                database) and no error will be displayed (either while creating or after failure). A poll is determined
-                to be invalid if its title, question or any of its answers are less than one character long or if there
-                are less than two answers.
+                The errors on the create/edit poll page are shown in alerts and aren't at all responsive.
+                This just annoys me but I was in a hurry :/
             </p>
         </p>
     </div>

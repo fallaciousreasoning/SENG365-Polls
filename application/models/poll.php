@@ -92,9 +92,11 @@ class Poll extends CI_Model {
      */
     public function deleteRecursive($pollId){
         $this->load->model('answer');
+        $this->load->model('vote');
 
         $this->db->delete("POLLS", array("id"=>$pollId));
         $this->answer->deleteAll($pollId);
+        $this->vote->clearVotes($pollId);
     }
     
     /**

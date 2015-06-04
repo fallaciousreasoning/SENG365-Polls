@@ -16,8 +16,6 @@ class Answer extends CI_Model {
     public $pollId;
     public $optionNo;
     public $answer;
-
-    public $votes;
     
     public function __construct() {
         $this->load->database();
@@ -28,16 +26,20 @@ class Answer extends CI_Model {
      * @param $pollId The id of the question the answer is for
      * @param $optionNo The option number of the answer
      * @param $answer The answer
-     * @param int $votes The number of votes. Defaults to 0
+     * @param int $id The number id to create the answer with. Will be auto set if it is left out
      * @return mixed The insert id
      */
-    public function create($pollId, $optionNo, $answer, $votes=0){
+    public function create($pollId, $optionNo, $answer, $id=NULL){
         //Escape data before letting it near the data base
         $pollId = (int)$pollId;
         $optionNo = (int)$optionNo;
-        $votes = (int)$votes;
 
-        $this->db->insert("ANSWERS", array("pollId"=>$pollId, "optionNo"=>$optionNo, "answer"=>$answer, "votes"=>$votes));
+        $data = array("pollId"=>$pollId, "optionNo"=>$optionNo, "answer"=>$answer);
+        if ($id){
+            $data["id"] = $id;
+        }
+
+        $this->db->insert("ANSWERS", $data);
         return $this->db->insert_id();
     }
 
@@ -103,31 +105,6 @@ class Answer extends CI_Model {
             $list[] = $answer;
         }
         return $list;
-    }
-
-    /**
-     * Votes for an answer
-     * @param $answerId The answer to vote for
-     */
-    public function vote($answerId) {
-        //Escape the answerId
-        $answerId = (int)$answerId;
-
-        $this->db->set('votes', 'votes + 1', FALSE);
-        $this->db->where("id", $answerId);
-        $this->db->update("ANSWERS");
-    }
-
-    /**
-     * Clears all votes on a poll
-     * @param $pollId The id of the poll to clear votes on
-     */
-    public function clearVotes($pollId){
-        //Escape the pollId
-        $pollId = (int)$pollId;
-
-        $this->db->where("pollId", $pollId);
-        $this->db->update("ANSWERS", array("votes" => 0));
     }
 
     /**

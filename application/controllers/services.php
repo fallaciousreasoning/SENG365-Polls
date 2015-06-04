@@ -53,7 +53,7 @@ class Services extends REST_Controller {
 
             //Insert all the answers
             for ($i = 0; $i < $answers_count; ++$i) {
-                $answers[$i]["optionNo"] = $i;
+                $answers[$i]["optionNo"] = $i + 1;
                 $answers[$i]["questionId"] = $pollId;
 
                 //Answer doesn't need html escaping, angular is magic
@@ -92,15 +92,11 @@ class Services extends REST_Controller {
             for ($i = 0; $i < $answers_count; ++$i) {
                 $answer = $answers[$i];
 
-                $answer["optionNo"] = $i;
+                $answer["optionNo"] = $i + 1;
                 $answer["questionId"] = $pollId;
 
                 //Angular magically doesn't worry about html being escaped
-                $votes = 0;
-                if (isset($data["votes"])) {
-                    $votes = $data["votes"];
-                }
-                $this->answer->create($pollId, $answer["optionNo"], $answer["answer"], $votes);
+                $this->answer->create($pollId, $answer["optionNo"], $answer["answer"], $answer["id"]);
             }
         }
         catch (Exception $e){
@@ -128,15 +124,26 @@ class Services extends REST_Controller {
      */
     public function votes_get($pollId){
         $this->load->model("answer");
+        $this->load->model("vote");
 
         try {
             $answers = $this->answer->getAnswers($pollId);
-            $votes = array();
+            $votes = $this->vote->getVotes($pollId);
+
+            $answerVotes = array();
             foreach ($answers as $answer) {
-                $votes[] = $answer->votes;
+                //Set the number of votes for this answer to 0
+                $answerVotes[$answer->optionNo - 1] = 0;
+                foreach ($votes as $vote){
+                    //Foreach vote that counts towards this answer
+                    //add one to the number of vote it has
+                    if ($vote->answerId == $answer->id){
+                        $answerVotes[$answer->optionNo - 1] += 1;
+                    }
+                }
             }
 
-            $this->response($votes, 200);
+            $this->response($answerVotes, 200);
         }catch (Exception $e){
             $this->response(array("errorMessage"=>"Poll does not exist!"), 404);
         }
@@ -149,11 +156,12 @@ class Services extends REST_Controller {
      */
     public function votes_post($pollId, $optionNo){
         $this->load->model("answer");
+        $this->load->model("vote");
 
         try {
             $answer = $this->answer->getAnswer($pollId, $optionNo);
 
-            $this->answer->vote($answer->id);
+            $this->vote->vote($pollId, $answer->id, $this->input->ip_address());
             $this->response(NULL, 201);
         }catch (Exception $e){
             $this->response(array("errorMessage"=>"The poll or option does not exist!"), 404);
@@ -166,9 +174,10 @@ class Services extends REST_Controller {
      */
     public function votes_delete($pollId) {
         $this->load->model("answer");
+        $this->load->model("vote");
 
         try {
-            $this->answer->clearVotes($pollId);
+            $this->vote->clearVotes($pollId);
         }catch (Exception $e){
             $this->response(array("errorMessage"=>"The poll does not exist!"), 404);
         }

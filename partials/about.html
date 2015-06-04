@@ -59,9 +59,10 @@
                 to /services/polls/{pollId} will update an existing poll.
             </p>
             <p>
-                You can also save a poll with blank fields (such as the title, question or any of the answers). On a related
-                note you can also save polls with no answers...). What I'm trying to say is I don't really check if your
-                polls are valid :/
+                You can submit an invalid poll from the poll creation form (although it won't be added/updated in the
+                database) and no error will be displayed (either while creating or after failure). A poll is determined
+                to be invalid if its title, question or any of its answers are less than one character long or if there
+                are less than two answers.
             </p>
         </p>
     </div>
@@ -73,7 +74,7 @@
     </div>
     <div class="panel-body">
         The REST services provided by this program can be accessed by {BASEURL}/services/{query}. In all cases the
-        program will respond with a 404 if something goes wrong or a 20X if all is right in the world. Now, to the details.
+        program will respond with a 404 (even when a 500 seems more appropriate. This was specified in the assignment handout) if something goes wrong or a 20X if all is right in the world. Now, to the details.
 
         <table class="table table-striped">
             <thead>
@@ -115,9 +116,9 @@
                     <td>A JSON object representing the poll to create</td>
                     <td>
                         201 if the poll was successfully created or a
-                        404 if something went wrong
+                        404 if something went wrong (though I feel like this should be a 500)
                     </td>
-                    <td>Creates a new poll</td>
+                    <td>Creates a new poll. If the creation fails then it will return a list of errors as part of the 404</td>
                 </tr>
                 <tr>
                     <td>{BASEURL}/index.php/service/polls/{pollId}</td>
@@ -125,24 +126,24 @@
                     <td>A JSON object representing the poll to update</td>
                     <td>
                         200 if the poll was successfully updated or a
-                        404 if something went wrong
+                        404 if something went wrong (though I feel like this should be a 500)
                     </td>
-                    <td>Updates an existing poll. Note, in the original specification this method was meant to be PUT, however, the CodeIgniter library I was using to make a rest service had significant problems with PUT, so I have made it POST as a workaround</td>
+                    <td>Updates an existing poll. Note, in the original specification this method was meant to be PUT, however, the CodeIgniter library I was using to make a rest service had significant problems with PUT, so I have made it POST as a workaround. If the creation fails then it will return a list of errors as part of the 404</td>
                 </tr>
                 <tr>
                     <td>{BASEURL}/index.php/service/polls/{pollId}</td>
                     <td>DELETE</td>
                     <td>None</td>
                     <td>
-                        200 if the poll was successfully deleted
+                        200 ok
                     </td>
-                    <td>Deletes an existing poll</td>
+                    <td>Deletes an existing poll (this method will return 200 even if the poll does not exist)</td>
                 </tr>
                 <tr>
                     <td>{BASEURL}/index.php/service/votes/{pollId}/{optionNo}</td>
                     <td>POST</td>
                     <td>None</td>
-                    <td>None</td>
+                    <td>201 created if the vote was successful or 404 if the poll or option does not exist</td>
                     <td>Votes for a an option within a poll. {pollId} is the id of the poll to vote for
                     and {optionNo} is the option within the poll to vote for</td>
                 </tr>
@@ -151,10 +152,10 @@
                     <td>GET</td>
                     <td>None</td>
                     <td>
-                        200 ok and a list of all votes on a poll of the form {0, 1,  5}
+                        200 ok and a list of all votes on a poll of the form [0, 1,  5]
                         where the index of the vote count is the same as that
                         as the optionNumber of an answer within the poll. 404 if the
-                        pollId is invalid.
+                        pollId does not exist.
                     </td>
                     <td>Gets a list of all votes within a poll. {pollId} is the id
                     of the poll to get votes for</td>
@@ -164,7 +165,8 @@
                     <td>DELETE</td>
                     <td>None</td>
                     <td>
-                        200 ok.
+                        200 ok if the poll was successfully reset or 404 if the poll
+                        does not exist.
                     </td>
                     <td>Resets the votes on a poll. {pollId} is the id of the poll to reset</td>
                 </tr>

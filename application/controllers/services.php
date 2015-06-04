@@ -45,6 +45,12 @@ class Services extends REST_Controller {
 
         try {
             $data = json_decode(trim(file_get_contents('php://input')), true);
+            //Validate the poll
+            $errors = $this->validate($data);
+            if (count($errors) > 0){
+                $this->response(array("errors"=>$errors), 404);
+                return;
+            }
 
             //Question and title don't need html escaping, angular is magic
             $pollId = $this->poll->create($data["title"], $data["question"]);
@@ -77,9 +83,15 @@ class Services extends REST_Controller {
         $this->load->model("poll");
         $this->load->model("answer");
 
-        $data = json_decode(trim(file_get_contents('php://input')), true);
-
         try {
+            $data = json_decode(trim(file_get_contents('php://input')), true);
+            //Validate the poll
+            $errors = $this->validate($data);
+            if (count($errors) > 0){
+                $this->response(array("errors"=>$errors), 404);
+                return;
+            }
+
             //Angular magically escapes stuff
             $this->poll->update($pollId, $data["title"], $data["question"]);
 
@@ -105,6 +117,36 @@ class Services extends REST_Controller {
     }
 
     /**
+     * Checks to see whether a poll is valid and returns a list of errors
+     * @param $poll the poll to validate
+     * @return array The errors within the poll
+     */
+    private function validate($poll){
+        $errors = array();
+
+        $title = $poll["title"];
+        $question = $poll["question"];
+        $answers = $poll["answers"];
+
+        if (strlen($title) < 1) {
+            $errors[] = "Title must have at least one character!";
+        }
+        if (strlen($question) < 1){
+            $errors[] = "Question must contain at least one character!";
+        }
+        if (count($answers) < 2){
+            $errors[] = "Poll must have at least two answers!";
+        }
+
+        for ($i = 0; $i < count($answers); ++$i){
+            if (strlen($answers[$i]["answer"]) < 1){
+                $errors[] = "Answer ".($i + 1)." must contain at least one character!";
+            }
+        }
+        return $errors;
+    }
+
+    /**
      * Deletes an existing poll. Returns a 200 if successful
      * @param $pollId The id of the poll to delete
      */
@@ -123,10 +165,13 @@ class Services extends REST_Controller {
      * @param $pollId The id of the poll to get votes for
      */
     public function votes_get($pollId){
+        $this->load->model("poll");
         $this->load->model("answer");
         $this->load->model("vote");
 
         try {
+            //Check to see if the poll exists (this throws an exception if it doesn't)
+            $poll = $this->poll->getPoll($pollId);
             $answers = $this->answer->getAnswers($pollId);
             $votes = $this->vote->getVotes($pollId);
 
@@ -155,10 +200,13 @@ class Services extends REST_Controller {
      * @param $optionNo The option to vote for, within the poll
      */
     public function votes_post($pollId, $optionNo){
+        $this->load->model("poll");
         $this->load->model("answer");
         $this->load->model("vote");
 
         try {
+            //Check to see if the poll exists (this throws an exception if it doesn't)
+            $poll = $this->poll->getPoll($pollId);
             $answer = $this->answer->getAnswer($pollId, $optionNo);
 
             $this->vote->vote($pollId, $answer->id, $this->input->ip_address());
@@ -173,10 +221,14 @@ class Services extends REST_Controller {
      * @param $pollId The id of the poll to delete answers for
      */
     public function votes_delete($pollId) {
+        $this->load->model("poll");
         $this->load->model("answer");
         $this->load->model("vote");
 
         try {
+            //Check to see if the poll exists (this throws an exception if it doesn't)
+            $poll = $this->poll->getPoll($pollId);
+            //Clear the votes on the poll
             $this->vote->clearVotes($pollId);
         }catch (Exception $e){
             $this->response(array("errorMessage"=>"The poll does not exist!"), 404);
